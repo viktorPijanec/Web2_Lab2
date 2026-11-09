@@ -1,0 +1,26 @@
+html 
+    head 
+        title Labos 2
+    body
+        if username
+            h1 Welcome #{username}
+        ul 
+            li: a(href='/', title='Home') Home
+            if username
+                li: form(action="/logout", method="post")
+                    input(type="submit", value="Logout " + username)
+            else
+                li: a(href='/login', title='Login') Login
+
+        if username
+            p 
+                | You are logged in as #{username}. 
+                | You can view the list of users by clicking the button below.
+            form(action="/show_users", method="get")
+                input#checkbox1(type="checkbox", name="checkbox1", value="true" checked)
+                label(for="checkbox1") Uključi ranjivost
+                input(type="password", name="pin", placeholder="PIN")
+                button(type="submit") Show users
+
+
+        

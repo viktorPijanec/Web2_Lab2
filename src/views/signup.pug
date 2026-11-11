@@ -1,0 +1,30 @@
+html
+  head
+    title Sign up
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(rel="stylesheet" href="/styles.css")
+  body
+    main.auth-page
+      section.auth-card
+        p.eyebrow Lab 2
+        h1 Create your account
+        p.subtitle Start with a balance of 1000.
+
+        if error
+          p.error(role="alert")= error
+
+        form.auth-form(action="/sign-up" method="post")
+          label(for="username") Username
+          input#username(type="text" name="username" autocomplete="username" required)
+
+          label(for="password") Password
+          input#password(type="password" name="password" autocomplete="new-password" required)
+
+          label(for="confirmPassword") Confirm password
+          input#confirmPassword(type="password" name="confirmPassword" autocomplete="new-password" required)
+
+          button(type="submit") Create account
+
+        p.switch-page
+          | Already have an account?
+          a(href="/login") Sign in

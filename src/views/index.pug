@@ -1,26 +1,83 @@
-html 
-    head 
-        title Labos 2
-    body
-        if username
-            h1 Welcome #{username}
-        ul 
-            li: a(href='/', title='Home') Home
-            if username
-                li: form(action="/logout", method="post")
-                    input(type="submit", value="Logout " + username)
+html
+    head
+        title Lab 2 Dashboard
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        link(rel="stylesheet" href="/styles.css")
+    body.dashboard-page
+        - const isVulnerability1Enabled = vulnerability1Enabled ?? false;
+        - const isVulnerability2Enabled = vulnerability2Enabled ?? false;
+
+        header.dashboard-header
+            a.brand(href="/") Lab 2
+            .user-menu
+                span.user-pill #{username}
+                form(action="/logout" method="post")
+                    button.button.button-quiet(type="submit") Log out
+
+        main.dashboard
+            section.hero
+                h1 Welcome, #{username}
+
+            if users && users.length
+                section.panel.results-panel
+                    .panel-heading
+                        div
+                            p.eyebrow Query results
+                            h2 User accounts
+                        span.result-count #{users.length} result(s)
+                    .user-table
+                        .table-row.table-header
+                            span Username
+                            span Balance
+                        each user in users
+                            .table-row
+                                span.user-name #{user.username}
+                                span.balance #{user.balance}
             else
-                li: a(href='/login', title='Login') Login
+                section.empty-state
+                    p No accounts selected yet
+                    span Submit a username query below to display account information.
 
-        if username
-            p 
-                | You are logged in as #{username}. 
-                | You can view the list of users by clicking the button below.
-            form(action="/show_users", method="get")
-                input#checkbox1(type="checkbox", name="checkbox1", value="true" checked)
-                label(for="checkbox1") Uključi ranjivost
-                input(type="password", name="pin", placeholder="PIN")
-                button(type="submit") Show users
+            section.tools-grid
+                article.panel.tool-card
+                    .tool-icon SQL
+                    h2 Find an account
+                    p Search for a username and view its balance.
+                    p You can test SQL injection by copying this: 
+                        code ' OR 1=1--
+                    form.tool-form(action="/show_users" method="get")
+                        label(for="username") Username
+                        input#username(type="text" name="username" placeholder="Enter a username" required)
+                        label.toggle-row(for="checkbox1")
+                            input#checkbox1(type="checkbox" name="checkbox1" value="true" checked=isVulnerability1Enabled)
+                            span.toggle-track
+                            span Enable SQL injection vulnerability
+                        button.button.button-primary(type="submit") Show users
 
+                article.panel.tool-card
+                    .tool-icon CSRF
+                    h2 CSRF controls
+                    p Test how a forged request can affect a logged-in account.
+                    form.tool-form(action="/toggle_crsf_vulnerability" method="post")
+                        label.toggle-row(for="checkbox2")
+                            input#checkbox2(type="checkbox" name="checkbox2" value="true" checked=isVulnerability2Enabled)
+                            span.toggle-track
+                            span Enable CSRF vulnerability
+                        button.button.button-primary(type="submit") Save settings
+                    p You can test CSRF by clicking the link below while logged in (and having the vulnerability enabled):
+                    a.demo-link(href="http://localhost:4010/") Open CSRF demo
+                    p The link takes you to a demo page that will attempt to transfer money from your account to an attacker's account. If the CSRF vulnerability is enabled, the transfer will succeed without your consent.
+
+            article.panel.tool-card.transfer-card
+                .tool-icon PAY
+                h2 Transfer funds
+                p Send money to another account.
+                form.tool-form(action="/transfer" method="get")
+                    label(for="transferTo") Recipient username
+                    input#transferTo(type="text" name="to" placeholder="Enter a username" required)
+                    label(for="transferAmount") Amount
+                    input#transferAmount(type="number" name="amount" min="1" step="1" placeholder="100" required)
+                    input(type="hidden" name="token" value=csrfToken)
+                    button.button.button-primary(type="submit") Make transfer
 
         

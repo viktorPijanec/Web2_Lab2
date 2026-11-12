@@ -11,6 +11,8 @@ dotenv.config();
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 
+app.set("trust proxy", 1); // trust first proxy
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET!,
@@ -18,7 +20,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // Set to true if using HTTPS
+      secure: true, // Set to true if using HTTPS
+      sameSite: "none",
     },
   }),
 );

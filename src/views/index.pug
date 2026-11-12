@@ -44,7 +44,7 @@ html
                     h2 Find an account
                     p Search for a username and view its balance.
                     p You can test SQL injection by copying this: 
-                        code ' OR 1=1--
+                        code ' OR '1'='1
                     form.tool-form(action="/show_users" method="get")
                         label(for="username") Username
                         input#username(type="text" name="username" placeholder="Enter a username" required)
@@ -65,7 +65,7 @@ html
                             span Enable CSRF vulnerability
                         button.button.button-primary(type="submit") Save settings
                     p You can test CSRF by clicking the link below while logged in (and having the vulnerability enabled):
-                    a.demo-link(href="http://localhost:4010/") Open CSRF demo
+                    a.demo-link(href=csrfDemoUrl) Open CSRF demo
                     p The link takes you to a demo page that will attempt to transfer money from your account to an attacker's account. If the CSRF vulnerability is enabled, the transfer will succeed without your consent.
 
             article.panel.tool-card.transfer-card

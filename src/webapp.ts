@@ -36,13 +36,10 @@ const baseURL = externalUrl || `http://localhost:${port}`;
 app.get("/", auth.requiresAuthentication, async function (req, res) {
   const username = req.user?.username;
 
-  // const usersResult = await pool.query("SELECT username, balance FROM users");
-
-  // const users = usersResult.rows;
-
   res.render("index", {
     username,
     csrfToken: getCsrfToken(req),
+    csrfDemoUrl: process.env.CSRF_DEMO_URL,
     vulnerability1Enabled: req.session.vulnerability1Enabled ?? false,
     vulnerability2Enabled: req.session.vulnerability2Enabled ?? false,
   });
@@ -80,6 +77,7 @@ app.get("/show_users", auth.requiresAuthentication, async function (req, res) {
     username,
     users,
     csrfToken: getCsrfToken(req),
+    csrfDemoUrl: process.env.CSRF_DEMO_URL,
     vulnerability1Enabled,
     vulnerability2Enabled,
   });

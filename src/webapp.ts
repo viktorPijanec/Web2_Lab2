@@ -284,14 +284,3 @@ function getCsrfToken(req: express.Request): string {
 
   return req.session.csrfToken;
 }
-
-function hasValidCsrfToken(req: express.Request): boolean {
-  const submittedToken = req.body.csrfToken;
-  const sessionToken = req.session.csrfToken;
-
-  return (
-    typeof submittedToken === "string" &&
-    typeof sessionToken === "string" &&
-    submittedToken === sessionToken
-  );
-}
